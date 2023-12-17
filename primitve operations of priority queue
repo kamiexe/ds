@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+
+#define MAX_SIZE 5
+
+struct Element {
+    int data;
+    int priority;
+};
+
+struct PriorityQueue {
+    struct Element queue[MAX_SIZE];
+    int rear;
+};
+
+int isFull(struct PriorityQueue *pq) {
+    return pq->rear == MAX_SIZE - 1;
+}
+
+int isEmpty(struct PriorityQueue *pq) {
+    return pq->rear == -1;
+}
+
+void enqueue(struct PriorityQueue *pq, int data, int priority) {
+    if (isFull(pq)) {
+        printf("Priority Queue is full. Cannot enqueue.\n");
+    } else {
+        struct Element newItem;
+        newItem.data = data;
+        newItem.priority = priority;
+        int i;
+        for (i = pq->rear; i >= 0; i--) {
+            if (pq->queue[i].priority > priority) {
+                pq->queue[i + 1] = pq->queue[i];
+            } else {
+                break;
+            }
+        }
+        pq->queue[i + 1] = newItem;
+        pq->rear++;
+        printf("%d enqueued to the Priority Queue with priority %d.\n", data, priority);
+    }
+}
+
+void dequeue(struct PriorityQueue *pq) {
+    if (isEmpty(pq)) {
+        printf("Priority Queue is empty. Cannot dequeue.\n");
+    } else {
+        printf("%d dequeued from the Priority Queue with priority %d.\n", pq->queue[pq->rear].data, pq->queue[pq->rear].priority);
+        pq->rear--;
+    }
+}
+
+void display(struct PriorityQueue *pq) {
+    if (isEmpty(pq)) {
+        printf("Priority Queue is empty.\n");
+    } else {
+        printf("Priority Queue elements:\n");
+        for (int i = pq->rear; i >= 0; i--) {
+            printf("Data: %d, Priority: %d\n", pq->queue[i].data, pq->queue[i].priority);
+        }
+    }
+}
+
+int main() {
+    struct PriorityQueue pq;
+    pq.rear = -1;
+
+    enqueue(&pq, 1, 2);
+    enqueue(&pq, 2, 1);
+    enqueue(&pq, 3, 3);
+    enqueue(&pq, 4, 2);
+    enqueue(&pq, 5, 4);
+    display(&pq);
+    dequeue(&pq);
+    dequeue(&pq);
+    display(&pq);
+
+    getch(); // For Windows systems to hold the output window
+    clrscr(); // Clearing the screen - though this function may not exist in all compilers
+
+    return 0;
+}
