@@ -1,0 +1,39 @@
+// Function to convert a postfix expression to infix
+void postfixToInfix(char postfix[]) {
+    int length = strlen(postfix);
+    struct Stack stack;
+    initialize(&stack);
+
+    // Process each character of the postfix expression from left to right
+    for (int i = 0; i < length; i++) {
+        char symbol = postfix[i];
+
+        // If the symbol is an operand, push it onto the stack
+        if (isOperand(symbol)) {
+            push(&stack, symbol);
+        } else {
+            // If the symbol is an operator, pop two operands from the stack,
+            // concatenate them with the operator in between, enclose the expression in parentheses,
+            // and push the resulting expression back onto the stack
+            char operand2 = pop(&stack);
+            char operand1 = pop(&stack);
+            char infixExpression[MAX_SIZE];
+            sprintf(infixExpression, "(%c%c%c)", operand1, symbol, operand2);
+            push(&stack, infixExpression[0]);
+        }
+    }
+
+    // The stack now contains the final infix expression
+    printf("Infix expression: %s\n", stack.items);
+}
+
+int main() {
+    char postfix[MAX_SIZE];
+
+    printf("Enter a postfix expression: ");
+    scanf("%s", postfix);
+
+    postfixToInfix(postfix);
+
+    return 0;
+}
